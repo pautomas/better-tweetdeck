@@ -1,6 +1,6 @@
 {
   "name": "Extend TweetDeck",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Improve your TweetDeck experience with new features and tweaks (including Keyboard shortcuts).",
   "icons": { 
       "16": "icons/icon-16x16.png",
