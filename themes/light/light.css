@@ -1,0 +1,124 @@
+/* Light theme */
+body.light {
+  background: #FFF;
+}
+.light i,
+.light .follow-combo {
+  background-image: url('td_web_sprite_icons.png');
+}
+.light .js-profile-menu,
+.light .column-options .btn-alt {
+  color: #333;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #CCC;
+  background-image: -webkit-linear-gradient(#ffffff, #dddddd);
+}
+.light a:hover .cog-sml {
+  background-position: -120px -430px;
+}
+.light .chp-actions a:hover i,
+.light .chp-actions a.active i {
+  background-color: #000;
+}
+.light .chp-detail .chp-content p {
+  color: #333;
+}
+.light .chp p a,
+.light .chp-detail p a,
+.light .chp-message p a,
+.light .chp-replying p a,
+.light .chp-facebook p a,
+.light .chp-activity p a,
+.light .chp-scheduled p a,
+.light .chp-interactions p a,
+.light .chp p a:visited,
+.light .chp-detail p a:visited,
+.light .chp-message p a:visited,
+.light .chp-replying p a:visited,
+.light .chp-facebook p a:visited,
+.light .chp-activity p a:visited,
+.light .chp-scheduled p a:visited,
+.light .chp-interactions p a:visited,
+.light .chp .chp-action,
+.light .chp-detail .chp-action,
+.light .chp-message .chp-action,
+.light .chp-replying .chp-action,
+.light .chp-facebook .chp-action,
+.light .chp-activity .chp-action,
+.light .chp-scheduled .chp-action,
+.light .chp-interactions .chp-action {
+  color: #5383C0;
+}
+.light .cards-summary-title {
+  color: #999;
+}
+.light .cards-summary-description {
+  color: #999 !important;
+}
+.light .column {
+  border: 1px solid #EEE;
+  background-color: #FAFAFA;
+  box-shadow: 0 0 0 transparent,inset 0 1px 0 #DDD;
+}
+.light .column-header h1 {
+  color: #777;
+  text-shadow: 0 1px 0 rgba(205, 205, 205, 0.2);
+}
+.light .column-options {
+  background-color: #DDD;
+}
+.light .chp,
+.light .chp-detail,
+.light .chp-message,
+.light .chp-replying,
+.light .chp-facebook,
+.light .chp-activity,
+.light .chp-scheduled,
+.light .chp-interactions {
+  color: #333;
+  border-bottom: 1px solid #AAA;
+}
+.light .chp-activity .activity-header,
+.light .chp-scheduled .activity-header {
+  background: #EEE;
+}
+.light .chp-activity,
+.light .chp-scheduled {
+  box-shadow: inset -4px -4px #eeeeee, inset 4px 4px #eeeeee;
+}
+.light .chp .fullname,
+.light .chp-detail .fullname,
+.light .chp-message .fullname,
+.light .chp-replying .fullname,
+.light .chp-facebook .fullname,
+.light .chp-activity .fullname,
+.light .chp-scheduled .fullname,
+.light .chp-interactions .fullname,
+.light .chp .username,
+.light .chp-detail .username,
+.light .chp-message .username,
+.light .chp-replying .username,
+.light .chp-facebook .username,
+.light .chp-activity .username,
+.light .chp-scheduled .username,
+.light .chp-interactions .username {
+  color: #333;
+}
+.light .scr-v::-webkit-scrollbar-thumb {
+  border-left: 1px solid #AAA;
+  border-bottom: 1px solid #EEE;
+  background-color: #DDD;
+}
+.light .scr-v::-webkit-scrollbar-track {
+  border-left: 1px solid #AAA;
+}
+.light article.s-current {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+.light .column.s-current {
+  box-shadow: 0 0 8px black,inset 0 1px 0px white;
+}
+.light .in-reply-to {
+  color: #333;
+  background-color: #DDD;
+}

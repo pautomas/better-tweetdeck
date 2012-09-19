@@ -1,7 +1,7 @@
 {
-  "name": "Keyboard shortcuts for TweetDeck",
-  "version": "1.0.1",
-  "description": "Navigate TweetDeck with your keyboard.",
+  "name": "Extend TweetDeck",
+  "version": "2.0.0",
+  "description": "Improve your TweetDeck experience with new features and tweaks (including Keyboard shortcuts).",
   "icons": { 
       "16": "icons/icon-16x16.png",
       "48": "icons/icon-48x48.png",
@@ -15,6 +15,8 @@
   "web_accessible_resources": [
     "better-tweetdeck.js",
     "custom.css",
+    "themes/light/light.css",
+    "themes/light/td_web_sprite_icons.png",
     "help.html"
   ],
   "background" : { "page" : "analytics/ga.html" },

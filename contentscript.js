@@ -9,6 +9,11 @@ var p = document.createElement('link');
 p.rel = 'stylesheet';
 p.href = chrome.extension.getURL('custom.css');
 (document.head||document.documentElement).appendChild(p);
+
+var l = document.createElement('link');
+l.rel = 'stylesheet';
+l.href = chrome.extension.getURL('themes/light/light.css');
+(document.head||document.documentElement).appendChild(l);
 //p.onload = function() {
 //   p.parentNode.removeChild(p);
 //};

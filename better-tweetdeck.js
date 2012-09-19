@@ -1,4 +1,88 @@
-(betterTweetdeck = {
+BTD = {};
+BTD = { components : {}, utils : {}, settings : {} };
+
+BTD.utils = {
+	openCustomModal : function(title, content) {
+		var modal = new TD.components.OpenColumn
+		  , html = ''
+
+		modal.$title.html(title)
+		modal.$menuContainer.html(content)
+		$("#open-modal").append(modal.$node).show()
+
+	}
+}
+BTD.settings = {
+	setUseLightTheme : function(useLightTheme) {
+		if (useLightTheme) {
+			$('body').addClass('light')
+		} else {
+			$('body').removeClass('light')
+		}
+		localStorage.setItem('use_light_theme', String(useLightTheme))
+	}
+	, getUseLightTheme : function(useLightTheme) {
+		return Boolean(localStorage.getItem('use_light_theme') === 'true')
+	}
+}
+
+BTD.components.DesignSettingsForm = {
+	init : function() {
+
+		if (BTD.settings.getUseLightTheme()) {
+			$('body').addClass('light')
+		} else {
+			$('body').removeClass('light')
+		}
+
+		/*
+		* Design settings component
+		*/
+		BTD.components.DesignSettings = TD.components.Base.extend(function() {
+			var content = '<fieldset id="global_filter_settings"><legend class="frm-legend">Global Filter Settings</legend>'
+						+ '<div class="control-group"><label for="use-light-theme" class="checkbox">Light theme<input type="checkbox" name="use-light-theme" id="use-light-theme" checked="checked"> </label></div>' 
+						+ '</fieldset>'
+						+ '<div class="mdl-version-number">Provided by the Extend TweetDeck extension</div>'
+			this.$node = $(content);
+			$("#global-settings").append(this.$node)
+
+		    this.$useLightTheme = $('#use-light-theme')
+			this.$useLightTheme.change(_.bind(this.handleLightThemeChange, this))
+			this.setLightTheme()
+		}).methods({
+		    destroy: function(a) {
+		        this.$node.remove()
+	    	},handleLightThemeChange: function(e) {
+				var useLightTheme = Boolean(this.$useLightTheme.attr("checked"))
+				BTD.settings.setUseLightTheme(useLightTheme)
+			},setLightTheme: function() {
+				this.$useLightTheme.attr("checked", BTD.settings.getUseLightTheme())
+			}})
+
+		/*
+		* Override global settings TD component to also include the Design settings
+		* one
+		*/
+		var _GlobalSettings = TD.components.GlobalSettings
+		TD.components.GlobalSettings = function() { 
+			var settingsDialog = new _GlobalSettings
+			  , menuNode = settingsDialog.$optionList
+			  , designNode = $('<li><a href="#" class="list-link" data-action="design"><strong>Design</strong><i class="chev-right"></i></a></li>')
+
+			$(menuNode.parent()).append(designNode)
+			designNode.on('click', function() {
+		        settingsDialog.$optionList.removeClass("selected"), settingsDialog.currentTab.destroy();
+				settingsDialog.currentTab = new BTD.components.DesignSettings
+		        settingsDialog.currentTabName = "design", $(this).addClass("selected")
+			})
+			settingsDialog.$optionList.push(designNode[0])
+
+			return settingsDialog;
+		}
+	}
+};
+
+BTD.components.KeyboardShortcuts = {
 	  currentColumnIndex : null
 	, currentChirpIndex : null
 	, currentColumnId : null
@@ -6,24 +90,9 @@
 
 	, init : function() {
 		var that = this
-
 		/*
-		* Close modal overlays when clicking outside just like in twitter.com
+		* Init keyboard shortcuts
 		*/
-		$('.ovl').bind('click', function(e) {
-			if ($(e.target).hasClass('l-cell')) {
-				$('.close').click()			
-			}
-		})
-
-		/*
-		$('#compose-modal .js-compose-input').live('focus', function(e) {
-			if (document.activeElement == document.body && $('#compose-modal .js-compose-input').is(':visible')) {
-				return false
-			}
-		})
-		*/
-
 		$(window).bind('keydown', function(e) { 
 				if (e.target.tagName != 'BODY'/* || that.getContext() != 'window'*/) {
 					console.log(e.target.tagName)
@@ -167,7 +236,7 @@
 					case 191: 
 						if (e.shiftKey) { // ? - Show help dialog
 							var modalContent = $('#help-modal-content').html()
-							that.openCustomModal('Keyboard Shortcuts', modalContent) 
+							BTD.utils.openCustomModal('Keyboard Shortcuts', modalContent) 
 						} else if (!e.shiftKey) { // / - Search
 							$('.js-search-input').focus()
 						}
@@ -283,14 +352,11 @@
 		})
 		return visibleChirps
 	}
-	,  openCustomModal : function(title, content) {
-		var modal = new TD.components.OpenColumn
-		  , that = this
-		  , html = ''
+};
 
-		modal.$title.html(title)
-		modal.$menuContainer.html(content)
-		$("#open-modal").append(modal.$node).show()
-
+(BetterTweetdeck = {
+	init : function() {
+		BTD.components.DesignSettingsForm.init();
+		BTD.components.KeyboardShortcuts.init();
 	}
 }).init()
