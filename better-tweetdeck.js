@@ -13,16 +13,34 @@ BTD.utils = {
 	}
 }
 BTD.settings = {
-	setUseLightTheme : function(useLightTheme) {
+	_ : {
+		use_light_theme : false
+	}
+	, storedSettings : {}
+	, init : function() {
+		this.storedSettings = localStorage.getItem('BTD_settings')
+		if (this.storedSettings == undefined) {
+			this.storeSettings()
+		}
+	}
+	, storeSettings : function() {
+		localStorage.setItem('BTD_settings', JSON.stringify(this._))
+	}
+	, getStoredSettings : function(key) {
+		var storedSettings = JSON.parse(localStorage.getItem('BTD_settings'))
+		return storedSettings[key]
+	}
+	, setUseLightTheme : function(useLightTheme) {
 		if (useLightTheme) {
 			$('body').addClass('light')
 		} else {
 			$('body').removeClass('light')
 		}
-		localStorage.setItem('use_light_theme', String(useLightTheme))
+		this._.use_light_theme = String(useLightTheme)
+		this.storeSettings()
 	}
 	, getUseLightTheme : function(useLightTheme) {
-		return Boolean(localStorage.getItem('use_light_theme') === 'true')
+		return Boolean(this.getStoredSettings('use_light_theme') === 'true')
 	}
 }
 
@@ -356,6 +374,7 @@ BTD.components.KeyboardShortcuts = {
 
 (BetterTweetdeck = {
 	init : function() {
+		BTD.settings.init()
 		BTD.components.DesignSettingsForm.init();
 		BTD.components.KeyboardShortcuts.init();
 	}
