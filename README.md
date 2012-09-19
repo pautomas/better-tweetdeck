@@ -1,7 +1,20 @@
-Better TweetDeck
+Extend TweetDeck
 =============
 
-This Chrome extension adds keyboard shortcuts to the TweetDeck's web interface (http://web.tweetdeck.com) making them consistent with the existing ones at twitter.com
+This Chrome extension adds new features and tweaks to the TweetDeck's web interface (http://web.tweetdeck.com).
+
+Current features
+------------------
+
+* Keyboard shortcuts making them consistent with the existing ones at twitter.com 
+* Change TweetDeck's default dark theme for a lighter one
+
+
+Change theme
+------------------
+
+Go to TweetDeck's Settings > Design > and click on "Light theme"
+
 
 Keyboard shortcuts
 ------------------
