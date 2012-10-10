@@ -9,7 +9,7 @@
 }
 
 article.s-current {
-	background-color: rgba(255, 255, 255, 0.1);
+	background-color: rgba(128, 128, 128, 0.2);
 }
 
 .keyboard-shortcuts .modal-table{float:left;width:175px;}
