@@ -7,13 +7,6 @@ Current features
 ------------------
 
 * Keyboard shortcuts making them consistent with the existing ones at twitter.com 
-* Change TweetDeck's default dark theme for a lighter one
-
-
-Change theme
-------------------
-
-Go to TweetDeck's Settings > Design > and click on "Light theme"
 
 
 Keyboard shortcuts

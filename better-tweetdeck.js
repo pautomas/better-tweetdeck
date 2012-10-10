@@ -47,11 +47,13 @@ BTD.settings = {
 BTD.components.DesignSettingsForm = {
 	init : function() {
 
+		/*
 		if (BTD.settings.getUseLightTheme()) {
 			$('body').addClass('light')
 		} else {
 			$('body').removeClass('light')
 		}
+		*/
 
 		/*
 		* Design settings component
@@ -118,8 +120,8 @@ BTD.components.KeyboardShortcuts = {
 				}
 				switch (e.which) {
 					case 13: // Enter - Open tweet detail
-						var detailHeader = $('#' + that.currentColumnId + ' header.detail')
-						if (detailHeader.length > 0) {
+						var detailHeader = $('#' + that.currentColumnId + ' .js-column-back')
+						if ($('#' + that.currentColumnId).hasClass('is-shifted-1')) {
 							detailHeader.click()
 						} else {
 							$('#' + that.currentColumnId).find("[data-key='" + that.currentChirpId + "']").children('div').click()
@@ -226,12 +228,12 @@ BTD.components.KeyboardShortcuts = {
 						}
 						break
 					case 78: // N - New tweet 
-						$('.btn-tweet').click()
+						TD.ui.compose.showComposeWindow()
 						return false
 						break
 					case 77: // M - Direct message
-						$('.btn-tweet').click()
-						$('.cp-message').click()
+						TD.ui.compose.showComposeWindow();
+						$('[rel="message"]').click()
 						return false
 						break
 					case 82: // R - Reply tweet / DM
@@ -240,16 +242,16 @@ BTD.components.KeyboardShortcuts = {
 							if (columnDetail && columnDetail.chirp.messages) {
 								$('#' + that.currentColumnId + ' .js-reply-tweetbox').focus()
 							} else {
-								$('#' + that.currentColumnId).find("[data-key='" + that.currentChirpId + "']").find('.action-reply').click()
+								$('#' + that.currentColumnId).find("[data-key='" + that.currentChirpId + "']").find(('[rel="reply"]')).click()
 							}
 							return false
 						}
 						break
 					case 84: // T - Retweet
-						$('#' + that.currentColumnId).find("[data-key='" + that.currentChirpId + "']").find('.action-rt').click()
+						$('#' + that.currentColumnId).find("[data-key='" + that.currentChirpId + "']").find('[rel="retweet"]').click()
 						break
 					case 70: // F - Favorite
-						$('#' + that.currentColumnId).find("[data-key='" + that.currentChirpId + "']").find('.action-fav').click()
+						$('#' + that.currentColumnId).find("[data-key='" + that.currentChirpId + "']").find('[rel="favorite"]').click()
 						break
 					case 191: 
 						if (e.shiftKey) { // ? - Show help dialog
@@ -331,7 +333,7 @@ BTD.components.KeyboardShortcuts = {
 		this.currentChirpId = chirpId
 		if (this.currentChirpId) {
 			if (!isDetail) {
-				selector = '#' + columnId + ' .column-updates'
+				selector = '#' + columnId + ' .column-content'
 			} else {
 				selector = '#' + columnId + ' .column-detail'
 			}
@@ -374,8 +376,9 @@ BTD.components.KeyboardShortcuts = {
 
 (BetterTweetdeck = {
 	init : function() {
-		BTD.settings.init()
-		BTD.components.DesignSettingsForm.init();
+		// Temporary disabled theming (official TweetDeck already supports that)
+		//BTD.settings.init()
+		//BTD.components.DesignSettingsForm.init();
 		BTD.components.KeyboardShortcuts.init();
 	}
 }).init()
