@@ -25,3 +25,137 @@ article.s-current {
 
 .hlp-content{padding: 8px 8px 16px 8px;}
 .hlp-content.l-grouped {border-top: 1px solid #D2D2D2;}
+
+
+.spaces-container {
+	position: absolute; 
+	top: 50px; 
+	bottom: 30px;
+	left: 0px; 
+	width: 50px; 
+	z-index: 100;
+}
+.spaces {
+	background-color: rgba(256, 256, 256, 0.3); 
+	overflow-x: auto; 
+	overflow: hidden; 
+	-webkit-border-radius: 0 5px 5px 0;
+	   -moz-border-radius: 0 5px 5px 0;
+	        border-radius: 0 5px 5px 0;
+	-webkit-box-shadow: rgba(17, 17, 17, 0.15) 0 0 5px 3px;
+	   -moz-box-shadow: rgba(17, 17, 17, 0.15) 0 0 5px 3px;
+	        box-shadow: rgba(17, 17, 17, 0.15) 0 0 5px 3px;	height: 100%;
+	overflow: visible;
+	white-space: nowrap;
+	padding: 5px 0 5px 0;
+}
+
+.button-group {
+	white-space: nowrap;
+	font-size: 0;
+}
+.button-group a:first-child {
+}
+
+.button-group a:last-child {
+	-webkit-border-radius: 0 3px 3px 0;
+	   -moz-border-radius: 0 3px 3px 0;
+	        border-radius: 0 3px 3px 0;
+}
+
+.space-item, .add-space-item {
+	counter-increment: spaces;
+	margin: 5px 3px 0 5px;
+	display: block;
+	padding: 0;
+}
+.space-item a {
+	width: 40px;
+	height: 40px;
+	margin: 0;
+}
+
+.space-item.s-current .btn-show-space,
+.space-item.s-current .btn-show-all {
+	-webkit-box-shadow: 0 0 8px #87C2ED;
+	   -moz-box-shadow: 0 0 8px #87c2ed;
+	        box-shadow: 0 0 8px #87C2ED;
+}
+
+.space-item .btn-show-space, 
+.space-item .btn-show-all {
+	display: inline-block;
+	text-align: center;
+	padding: 0;
+	-webkit-transition: all .1s ease-in;
+	   -moz-transition: all .1s ease-in;
+	        transition: all .1s ease-in;   
+}
+.btn-show-space .space-counter:before,
+.btn-show-all .space-counter:before {  
+	content: counter(spaces);
+	font-size: 20px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	text-align: center;
+	width: 40px;
+	padding-top: 10px;
+}
+.space-item:hover .btn-show-space {
+	width: 100px;
+	-webkit-border-radius: 3px 0 0 3px;
+	   -moz-border-radius: 3px 0 0 3px;
+	        border-radius: 3px 0 0 3px;
+}
+.space-item:hover .btn-show-all {
+	width: 100px;
+	-webkit-border-radius: 3px;
+	   -moz-border-radius: 3px;
+	        border-radius: 3px;
+}
+.space-item .content {
+	opacity: 0;
+	margin-top: 10px;
+	margin-left: 30px;
+	text-overflow: ellipsis;
+	max-width: 60px;
+	overflow: hidden;
+	-webkit-transition: all .1s ease-in;
+	   -moz-transition: all .1s ease-in;
+	        transition: all .1s ease-in;   
+}
+.space-item:hover .content {
+	opacity: 1;
+}
+.space-item .btn-edit-space {
+	display: none;
+	margin-left: -1px;
+	width: 30px;
+	font-size: 20px;
+	padding: 0;
+	padding-top: 10px;
+}
+.space-item:hover .btn-edit-space {
+	display: inline-block;
+}
+
+
+.add-space-item a {
+	width: 40px;
+	height: 25px;
+	display: inline-block;
+	text-align: center;
+	padding: 0;
+}
+.add-space-item .content:before {  
+	content: '+';
+	font-size: 20px;
+	display: block;
+}
+.space-list-container {
+    display: inline-block;
+    padding-left: 20px;
+}

@@ -1,3 +1,8 @@
+var templates = document.createElement('script');
+templates.src = chrome.extension.getURL('templates/mustaches.js');
+(document.head||document.documentElement).appendChild(templates);
+
+
 var s = document.createElement('script');
 s.src = chrome.extension.getURL('better-tweetdeck.js');
 (document.head||document.documentElement).appendChild(s);
