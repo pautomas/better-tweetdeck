@@ -1,82 +1,161 @@
 BTD = {};
-BTD = { components : {}, utils : {}, settings : {} };
+BTD = { components : {}, utils : {}, settings : {}, controller : {} };
+BTD.mustaches = BTD_mustaches
 
 BTD.utils = {
 	openCustomModal : function(title, content) {
-		var modal = new TD.components.OpenColumn
+		var modal = new TD.components.BaseModal
 		  , html = ''
 
 		modal.$title.html(title)
 		modal.$menuContainer.html(content)
 		$("#open-modal").append(modal.$node).show()
-
 	}
 }
+
 BTD.settings = {
-	_ : {
-		use_light_theme : false
+	STORAGE_KEY : 'settings'
+	, _ : {
+		enable_spaces : 'true'
 	}
 	, storedSettings : {}
 	, init : function() {
-		this.storedSettings = localStorage.getItem('BTD_settings')
+		this.storedSettings = BTD.storage.get(this.STORAGE_KEY)
 		if (this.storedSettings == undefined) {
+			this.storeSettings()
+		} else {
+			$.each(this.storedSettings, (function(key, value) {
+				if (this.storedSettings[key] != undefined) {
+					this._[key] = value
+				}
+			}).bind(this))
 			this.storeSettings()
 		}
 	}
 	, storeSettings : function() {
-		localStorage.setItem('BTD_settings', JSON.stringify(this._))
+		BTD.storage.set(this.STORAGE_KEY, this._)
 	}
 	, getStoredSettings : function(key) {
-		var storedSettings = JSON.parse(localStorage.getItem('BTD_settings'))
+		var storedSettings = BTD.storage.get(this.STORAGE_KEY)
 		return storedSettings[key]
 	}
-	, setUseLightTheme : function(useLightTheme) {
-		if (useLightTheme) {
-			$('body').addClass('light')
-		} else {
-			$('body').removeClass('light')
-		}
-		this._.use_light_theme = String(useLightTheme)
+	, setEnableSpaces : function(enableSpaces) {
+		this._.enable_spaces = String(enableSpaces)
 		this.storeSettings()
 	}
-	, getUseLightTheme : function(useLightTheme) {
-		return Boolean(this.getStoredSettings('use_light_theme') === 'true')
+	, getEnableSpaces : function() {
+		return Boolean(this.getStoredSettings('enable_spaces') === 'true')
 	}
 }
 
-BTD.components.DesignSettingsForm = {
+BTD.storage = {
+	get : function(key) {
+	  	return JSON.parse(localStorage.getItem('BTD_' + key))
+	}
+	, set : function set(key, value) {
+		localStorage.setItem('BTD_' + key, JSON.stringify(value))
+	}
+}
+
+
+BTD.controller.columnManager = {
+	getAllByFeedKey : function() {
+		var columns = new Object()
+		$(TD.controller.columnManager.getAllOrdered()).each(function() {
+			var column = this
+			$(this.model.getFeedKeys()).each(function() {
+				columns[this] = column
+			})
+		})
+		return columns
+	}
+	, getByFeedKey : function(key) {
+		return BTD.controller.columnManager.getAllByFeedKey()[key]
+	}
+}
+
+BTD.controller.spaceManager = (function() {
+	var STORAGE_KEY = 'spaces'
+	  , spaces = BTD.storage.get(STORAGE_KEY)||{}
+
+	return {
+		get : function(spaceId) {
+			return spaces[spaceId]
+		} 
+
+		, getAll : function() {
+			return spaces
+		}
+
+		, getAllOrdered : function() {
+			var orderedSpaces = []
+			
+			$.each(spaces, function(spaceId, space) {
+				space.id = spaceId
+				orderedSpaces.push(space)
+			})
+			return orderedSpaces
+		}
+
+		, add : function(space) {
+			space.id = this.getAllOrdered().length + 1
+			spaces[space.id] = space
+			BTD.storage.set(STORAGE_KEY, spaces)
+		}
+
+		, edit : function(spaceId, space) {
+			space.id = spaceId
+			spaces[space.id] = space
+			BTD.storage.set(STORAGE_KEY, spaces)
+		}
+
+		, remove : function(spaceId) {
+			delete spaces[spaceId]
+			BTD.storage.set(STORAGE_KEY, spaces)
+		}
+
+		, showSpace : function(spaceId) {
+			var space = this.get(spaceId)
+			$('.column').hide()
+			$(space.columns).each(function() {
+				var columnId = BTD.controller.columnManager.getByFeedKey(this).model.getKey()
+				$('#' + columnId).show()
+			})
+			$('#column-navigator .menu-button').text(space.name)
+		}
+
+		, showAll : function() {
+			$('.column').show()
+			$('#column-navigator .menu-button').text('Columns')
+		}
+	}
+})();
+
+BTD.components.ExtendSettingsForm = {
 	init : function() {
 
 		/*
-		if (BTD.settings.getUseLightTheme()) {
-			$('body').addClass('light')
-		} else {
-			$('body').removeClass('light')
-		}
+		* Extend settings component
 		*/
-
-		/*
-		* Design settings component
-		*/
-		BTD.components.DesignSettings = TD.components.Base.extend(function() {
-			var content = '<fieldset id="global_filter_settings"><legend class="frm-legend">Global Filter Settings</legend>'
-						+ '<div class="control-group"><label for="use-light-theme" class="checkbox">Light theme<input type="checkbox" name="use-light-theme" id="use-light-theme" checked="checked"> </label></div>' 
+		BTD.components.ExtendSettings = TD.components.Base.extend(function() {
+			var content = '<fieldset id="global_filter_settings"><legend class="frm-legend">Extend TweetDeck Settings</legend>'
+						+ '<div class="control-group"><label for="enable-spaces" class="checkbox">Enable spaces (needs refresh browser)<input type="checkbox" name="enable-spaces" id="enable-spaces" checked="checked"> </label></div>' 
 						+ '</fieldset>'
 						+ '<div class="mdl-version-number">Provided by the Extend TweetDeck extension</div>'
 			this.$node = $(content);
 			$("#global-settings").append(this.$node)
 
-		    this.$useLightTheme = $('#use-light-theme')
-			this.$useLightTheme.change(_.bind(this.handleLightThemeChange, this))
-			this.setLightTheme()
+		    this.$enableSpaces = $('#enable-spaces')
+			this.$enableSpaces.change(_.bind(this.handleEnableSpacesChange, this))
+			this.setEnableSpaces()
 		}).methods({
 		    destroy: function(a) {
 		        this.$node.remove()
-	    	},handleLightThemeChange: function(e) {
-				var useLightTheme = Boolean(this.$useLightTheme.attr("checked"))
-				BTD.settings.setUseLightTheme(useLightTheme)
-			},setLightTheme: function() {
-				this.$useLightTheme.attr("checked", BTD.settings.getUseLightTheme())
+	    	},handleEnableSpacesChange: function(e) {
+				var enableSpaces = Boolean(this.$enableSpaces.attr("checked"))
+				BTD.settings.setEnableSpaces(enableSpaces)
+			},setEnableSpaces: function() {
+				this.$enableSpaces.attr("checked", BTD.settings.getEnableSpaces())
 			}})
 
 		/*
@@ -85,19 +164,19 @@ BTD.components.DesignSettingsForm = {
 		*/
 		var _GlobalSettings = TD.components.GlobalSettings
 		TD.components.GlobalSettings = function() { 
-			var settingsDialog = new _GlobalSettings
-			  , menuNode = settingsDialog.$optionList
-			  , designNode = $('<li><a href="#" class="list-link" data-action="design"><strong>Design</strong><i class="chev-right"></i></a></li>')
+			var extendDialog = new _GlobalSettings
+			  , menuNode = extendDialog.$optionList
+			  , extendNode = $('<li><a href="#" class="list-link" data-action="extend"><strong>Extend TweetDeck</strong><i class="chev-right"></i></a></li>')
 
-			$(menuNode.parent()).append(designNode)
-			designNode.on('click', function() {
-		        settingsDialog.$optionList.removeClass("selected"), settingsDialog.currentTab.destroy();
-				settingsDialog.currentTab = new BTD.components.DesignSettings
-		        settingsDialog.currentTabName = "design", $(this).addClass("selected")
+			$(menuNode.parent()).append(extendNode)
+			extendNode.on('click', function() {
+		        extendDialog.$optionList.removeClass("selected"), extendDialog.currentTab.destroy();
+				extendDialog.currentTab = new BTD.components.ExtendSettings
+		        extendDialog.currentTabName = "extend", $(this).addClass("selected")
 			})
-			settingsDialog.$optionList.push(designNode[0])
+			extendDialog.$optionList.push(extendNode[0])
 
-			return settingsDialog;
+			return extendDialog;
 		}
 	}
 };
@@ -374,11 +453,149 @@ BTD.components.KeyboardShortcuts = {
 	}
 };
 
-(BetterTweetdeck = {
+BTD.components.SpacesSideBar = TD.components.Base.extend(function() {
+	this.$node = $(Hogan.compile(BTD.mustaches.space_container)
+			.render({spaces:BTD.controller.spaceManager.getAllOrdered()}))
+	, this._render()
+	, this._handleShowAll()
+	, this._registerEvents()
+}).methods({
+	  _refresh : function() {
+		this.$node = $(Hogan.compile(BTD.mustaches.space_container)
+				.render({spaces:BTD.controller.spaceManager.getAllOrdered()}))
+		$('.spaces-container').html(this.$node.html())
+	}
+	, _render : function() {		
+		$('#container')
+			.css('padding-left', '45px')
+			.after(this.$node)		
+	}
+	, _registerEvents : function() {
+		var spaces = BTD.controller.spaceManager.getAll()
+		$('.spaces-container').on('click', (function(event) {
+			var element = $(event.target).closest('.js-spaces-action')
+			$('#container').hide()
+			switch (element.data('action')) {
+				case 'show-all': 
+					this._handleShowAll()
+					break
+				case 'show-space':
+					var spaceId = element.attr('data-space')
+					$('.space-item.s-current').removeClass('s-current')
+					element.closest('.space-item').addClass('s-current')
+					BTD.controller.spaceManager.showSpace(spaceId)
+					break
+				case 'add-space':
+					var spacesManagerDialog = new BTD.components.SpacesManagerDialog(null)
+					$(spacesManagerDialog).on('save-successful', (function() {
+						this._refresh()
+					}).bind(this))
+					$("#open-modal").append(spacesManagerDialog.$node).show()
+					break
+				case 'edit-space':
+					var spaceId = element.attr('data-space')
+					  , spacesManagerDialog = new BTD.components.SpacesManagerDialog(spaceId)
+					$(spacesManagerDialog)
+						.on('save-successful', (function() {
+							this._refresh()
+						}).bind(this))
+						.on('remove-successful', (function() {
+							this._refresh()
+						}).bind(this))
+					$("#open-modal").append(spacesManagerDialog.$node).show()
+					break					
+			}
+			$('#container').show()
+		}).bind(this))
+	},
+	_handleShowAll : function() {
+		$('.space-item.s-current').removeClass('s-current')
+		$('.btn-show-all').closest('.space-item').addClass('s-current')
+		BTD.controller.spaceManager.showAll()
+	}
+})
+
+BTD.components.SpacesManagerDialog = TD.components.BaseModal.extend(function(spaceId) {
+      this.columns = TD.controller.columnManager.getAllOrdered()
+      this.spaceId = spaceId
+    var columnList = _.map(this.columns, function(column) {
+		return { key: column.model.getFeedKeys()[0], title: column.model.getTitle() }
+   	 	})
+      , currentSpace = {}
+	this.$menuContainer.html($(Hogan.compile(BTD.mustaches.spaces_dialog)
+		.render({columns:columnList})))
+	this.$spaceName = this.$menuContainer.find('#space-name')
+	this.$checkboxes = this.$menuContainer.find('input[type=checkbox]')
+	this.$footer.append($(Hogan.compile(BTD.mustaches.spaces_dialog_footer).render()))
+	this.$addSpaceButton = this.$footer.find('.js-add-space')
+	this.$removeSpaceButton = this.$footer.find('.js-remove-space')
+	if (this.spaceId) {
+		currentSpace = BTD.controller.spaceManager.get(this.spaceId)
+	    this.$title.html('Edit space')
+		this.$addSpaceButton.html('Save space')
+		this.$spaceName.val(currentSpace.name)
+		$.each(currentSpace.columns, (function(key, value) {
+			this.$checkboxes.filter('[value="' + value + '"]').attr('checked', 'checked')
+		}).bind(this))
+	} else {
+	    this.$title.html('Add new space')
+		this.$removeSpaceButton.remove()	
+	}
+	this._registerEvents()
+}).methods({
+	  _registerEvents : function() {
+	  	this.$menuContainer.find('form').on('submit', function() { return false });
+		this.$addSpaceButton.on('click', this._handleSaveSpace.bind(this))
+		this.$removeSpaceButton.on('click', this._handleRemoveSpace.bind(this))
+	}
+	, _handleSaveSpace : function() {
+		var spaceName = this.$spaceName.val()
+		  , checkedColumns = []
+		if (!this.$menuContainer.find('form')[0].checkValidity()) {
+			this._handleSaveFailure()
+		} else {
+			$(this.$checkboxes.filter(':checked')).each(function() {
+				checkedColumns.push($(this).val())
+			})
+			if (this.spaceId) {
+				BTD.controller.spaceManager.edit(this.spaceId, {name: spaceName, columns: checkedColumns})				
+			} else {
+				BTD.controller.spaceManager.add({name: spaceName, columns: checkedColumns})
+			}
+			this._handleSaveSuccess()
+		}
+	}
+	, _handleSaveSuccess : function() {
+        this.destroy()
+        $(this).trigger('save-successful')
+	}
+	, _handleSaveFailure : function() {
+	    TD.controller.progressIndicator.addMessage("Problem saving space. Please check the details and try again")		
+	}
+	, _handleRemoveSpace : function() {
+		BTD.controller.spaceManager.remove(this.spaceId)
+		this._handleRemoveSuccess()	
+	}
+	, _handleRemoveSuccess : function() {
+        this.destroy()
+        $(this).trigger('remove-successful')
+	}
+	, _handleRemoveFailure : function() {
+	    TD.controller.progressIndicator.addMessage("Problem saving space. Please check the details and try again")		
+	}
+	, destroy : function() {
+	    this.supr(), $("#open-modal").hide()
+	}
+})
+
+;(BetterTweetdeck = {
 	init : function() {
-		// Temporary disabled theming (official TweetDeck already supports that)
-		//BTD.settings.init()
-		//BTD.components.DesignSettingsForm.init();
-		BTD.components.KeyboardShortcuts.init();
+		BTD.settings.init()
+		BTD.components.ExtendSettingsForm.init();
+		BTD.components.KeyboardShortcuts.init()
+		
+		if (BTD.settings.getEnableSpaces()) {
+			new BTD.components.SpacesSideBar
+		}
 	}
 }).init()
