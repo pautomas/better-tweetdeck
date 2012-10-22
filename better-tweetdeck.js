@@ -11,6 +11,13 @@ BTD.utils = {
 		modal.$menuContainer.html(content)
 		$("#open-modal").append(modal.$node).show()
 	}
+	/**
+	 * Fake-hash: only joining available strings to generate a key that's 
+	 * hopefully both unique and persistent
+	 */ 
+	, generateColumnHash : function(column) {
+		return (column.model.getFeedKeys().join() + column.model.getTitle()).replace(/,\s/g, '')
+	}
 }
 
 BTD.settings = {
@@ -72,6 +79,16 @@ BTD.controller.columnManager = {
 	, getByFeedKey : function(key) {
 		return BTD.controller.columnManager.getAllByFeedKey()[key]
 	}
+	, getByFeedKeyHash : function(feedKeyHash) {
+		var column = {}
+		$(TD.controller.columnManager.getAllOrdered()).each(function() {
+			var columnFeedKeysHash = BTD.utils.generateColumnHash(this)
+		  	if (columnFeedKeysHash == feedKeyHash) {
+				column = this
+		  	}
+		})
+		return column
+	}
 }
 
 BTD.controller.spaceManager = (function() {
@@ -118,8 +135,13 @@ BTD.controller.spaceManager = (function() {
 			var space = this.get(spaceId)
 			$('.column').hide()
 			$(space.columns).each(function() {
-				var columnId = BTD.controller.columnManager.getByFeedKey(this).model.getKey()
-				$('#' + columnId).show()
+				var column = BTD.controller.columnManager.getByFeedKey(this) 
+					|| BTD.controller.columnManager.getByFeedKeyHash(this)
+				 ,  columnId = null
+				if (column !== undefined) {
+					columnId = column.model.getKey()
+					$('#' + columnId).show()
+				}
 			})
 			$('#column-navigator .menu-button').text(space.name)
 		}
@@ -519,7 +541,7 @@ BTD.components.SpacesManagerDialog = TD.components.BaseModal.extend(function(spa
       this.columns = TD.controller.columnManager.getAllOrdered()
       this.spaceId = spaceId
     var columnList = _.map(this.columns, function(column) {
-		return { key: column.model.getFeedKeys()[0], title: column.model.getTitle() }
+		return { key: BTD.utils.generateColumnHash(column), title: column.model.getTitle() }
    	 	})
       , currentSpace = {}
 	this.$menuContainer.html($(Hogan.compile(BTD.mustaches.spaces_dialog)
