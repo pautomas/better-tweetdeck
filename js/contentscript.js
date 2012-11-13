@@ -2,9 +2,8 @@ var templates = document.createElement('script');
 templates.src = chrome.extension.getURL('templates/mustaches.js');
 (document.head||document.documentElement).appendChild(templates);
 
-
 var s = document.createElement('script');
-s.src = chrome.extension.getURL('better-tweetdeck.js');
+s.src = chrome.extension.getURL('js/better-tweetdeck.js');
 (document.head||document.documentElement).appendChild(s);
 s.onload = function() {
     s.parentNode.removeChild(s);
@@ -12,18 +11,10 @@ s.onload = function() {
 
 var p = document.createElement('link');
 p.rel = 'stylesheet';
-p.href = chrome.extension.getURL('custom.css');
+p.href = chrome.extension.getURL('css/custom.css');
 (document.head||document.documentElement).appendChild(p);
 
-var l = document.createElement('link');
-l.rel = 'stylesheet';
-l.href = chrome.extension.getURL('themes/light/light.css');
-(document.head||document.documentElement).appendChild(l);
-//p.onload = function() {
-//   p.parentNode.removeChild(p);
-//};
-
-$.get(chrome.extension.getURL('help.html'), function(data) {
+$.get(chrome.extension.getURL('templates/help.html'), function(data) {
 	var d = document.createElement('div');
 	d.id = 'help-modal-content';
 	d.setAttribute('style', 'display:none');
