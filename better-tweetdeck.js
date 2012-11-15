@@ -434,7 +434,7 @@ BTD.components.KeyboardShortcuts = {
 		this.currentChirpId = chirpId
 		if (this.currentChirpId) {
 			if (!isDetail) {
-				selector = '#' + columnId + ' .column-content'
+				selector = '#' + columnId + ' .column-holder'
 			} else {
 				selector = '#' + columnId + ' .column-detail'
 			}
