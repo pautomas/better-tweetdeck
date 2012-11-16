@@ -1,11 +1,9 @@
-
 BTD.components.SpacesManagerDialog = TD.components.BaseModal.extend(function(spaceId) {
-      this.columns = TD.controller.columnManager.getAllOrdered()
-      this.spaceId = spaceId
-    var columnList = _.map(this.columns, function(column) {
+    var columnList = _.map(TD.controller.columnManager.getAllOrdered(), function(column) {
 		return { key: BTD.utils.generateColumnHash(column), title: column.model.getTitle() }
    	 	})
       , currentSpace = {}
+    this.spaceId = spaceId
 	this.$menuContainer.html($(Hogan.compile(BTD.mustaches.spaces_dialog)
 		.render({columns:columnList})))
 	this.$spaceName = this.$menuContainer.find('#space-name')

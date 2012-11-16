@@ -1,4 +1,3 @@
-
 BTD.settings = {
 	STORAGE_KEY : 'settings'
 	, _ : {

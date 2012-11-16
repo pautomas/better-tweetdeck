@@ -1,5 +1,5 @@
 BTD.storage = {
-	get : function(key) {
+	  get : function(key) {
 	  	return JSON.parse(localStorage.getItem('BTD_' + key))
 	}
 	, set : function set(key, value) {

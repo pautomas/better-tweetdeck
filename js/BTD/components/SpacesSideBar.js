@@ -52,8 +52,8 @@ BTD.components.SpacesSideBar = TD.components.Base.extend(function() {
 			}
 			$('#container').show()
 		}).bind(this))
-	},
-	_handleShowAll : function() {
+	}
+	, _handleShowAll : function() {
 		$('.space-item.s-current').removeClass('s-current')
 		$('.btn-show-all').closest('.space-item').addClass('s-current')
 		BTD.controller.spaceManager.showAll()

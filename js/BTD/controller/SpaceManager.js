@@ -1,10 +1,9 @@
-
 BTD.controller.spaceManager = (function() {
 	var STORAGE_KEY = 'spaces'
 	  , spaces = BTD.storage.get(STORAGE_KEY)||{}
 
 	return {
-		get : function(spaceId) {
+		  get : function(spaceId) {
 			return spaces[spaceId]
 		} 
 
