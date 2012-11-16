@@ -1,6 +1,15 @@
 BTD.controller.columnManager = (function() {
+	var currentColumnId = null
+
 	return {
-		getAllByFeedKey : function() {
+		  getIds: function() {
+				var columnIds = [] 
+				$(TD.controller.columnManager.getAllOrdered()).each(function() {
+					columnIds.push(this.model.getKey())
+				})
+				return columnIds
+		}
+		, getAllByFeedKey : function() {
 			var columns = new Object()
 			$(TD.controller.columnManager.getAllOrdered()).each(function() {
 				var column = this
@@ -11,7 +20,7 @@ BTD.controller.columnManager = (function() {
 			return columns
 		}
 		, getByFeedKey : function(key) {
-			return BTD.controller.columnManager.getAllByFeedKey()[key]
+			return TD.controller.columnManager.getAllByFeedKey()[key]
 		}
 		, getByFeedKeyHash : function(feedKeyHash) {
 			var column = {}
@@ -22,6 +31,18 @@ BTD.controller.columnManager = (function() {
 			  	}
 			})
 			return column
+		}
+		, getCurrentColumnId : function() {
+			return this.currentColumnId
+		}
+		, setCurrentColumnId : function(columnId) {
+			TD.controller.columnManager.showColumn(columnId)
+
+			if (this.currentColumnId) {
+				$('#' + this.currentColumnId).removeClass('s-current')
+			}
+			this.currentColumnId = columnId
+			$('#' + this.currentColumnId).addClass('s-current')
 		}
 	}
 })();
