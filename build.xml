@@ -1,0 +1,34 @@
+<project name="better-tweetdeck">
+
+	<property name="BTDsrc" location="js/BTD"/>
+	<property name="build" location="build"/>
+
+	<target name="build">
+		<delete dir="${build}"/>
+  		<concat destfile="${build}/js/better-tweetdeck.js">
+			<filelist dir="${BTDsrc}" files="namespaces.js, utils.js, settings.js, storage.js"/>
+		    <fileset dir="${BTDsrc}/controller" includes="*.js"/>
+		    <fileset dir="${BTDsrc}/components" includes="*.js"/>
+			<filelist dir="${BTDsrc}" files="init.js"/>
+		</concat>
+		<copy todir="${build}/js">
+			<fileset dir="js/" includes="*.js"/>
+		</copy>
+		<copy todir="${build}/css">
+			<fileset dir="css/" includes="*.css"/>
+		</copy>
+		<copy todir="${build}/templates">
+			<fileset dir="templates/" includes="*"/>
+		</copy>
+		<copy todir="${build}/icons">
+			<fileset dir="icons/" includes="*.png"/>
+		</copy>
+		<copy todir="${build}/analytics">
+			<fileset dir="analytics/" includes="*"/>
+		</copy>
+		<copy todir="${build}">
+			<fileset dir="." includes="manifest.json"/>
+		</copy>
+	</target>
+
+</project>
