@@ -1,6 +1,6 @@
 {
   "name": "Extend TweetDeck",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "Improve your TweetDeck experience with new features and tweaks (including Keyboard shortcuts).",
   "icons": { 
       "16": "icons/icon-16x16.png",
@@ -10,14 +10,12 @@
   "permissions" : ["https://web.tweetdeck.com/"],
   "content_scripts": [{
     "matches": ["https://web.tweetdeck.com/"]
-    , "js": ["jquery.js", "contentscript.js"]
+    , "js": ["js/jquery.js", "js/contentscript.js"]
   }],
   "web_accessible_resources": [
-    "better-tweetdeck.js",
-    "custom.css",
-    "themes/light/light.css",
-    "themes/light/td_web_sprite_icons.png",
-    "help.html",
+    "js/better-tweetdeck.js",
+    "css/custom.css",
+    "templates/help.html",
     "templates/mustaches.js"
   ],
   "background" : { "page" : "analytics/ga.html" },
