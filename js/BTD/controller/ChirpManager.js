@@ -35,7 +35,7 @@ BTD.controller.chirpManager = (function() {
 		  	return this.currentChirpId
 		  }
 		, getByColumnId: function(columnId) {
-				if ($('#' + columnId + ' header.detail').length > 0) {
+				if ($('[data-column="' + columnId + '"] header.detail').length > 0) {
 					return getFromDetailView(columnId)
 				} else {
 					return getFromUpdatesView(columnId)
@@ -44,16 +44,16 @@ BTD.controller.chirpManager = (function() {
 		, setCurrentChirp : function(columnId, chirpId) {
 			$("[data-key='" + this.currentChirpId +"']").removeClass('s-current')
 
-			var isDetail = ($('#' + columnId + ' header.detail').length > 0)
+			var isDetail = ($('[data-column="' + columnId + '"] header.detail').length > 0)
 			  , chirp = null
-			  , selector = null
+			  , selector = BTD.controller.columnManager.getColumnSelector(columnId)
 
 			this.currentChirpId = chirpId
 			if (this.currentChirpId) {
 				if (!isDetail) {
-					selector = '#' + columnId + ' .column-holder'
+					selector += ' .column-holder'
 				} else {
-					selector = '#' + columnId + ' .column-detail'
+					selector = ' .column-detail'
 				}
 				chirp = $(selector).find("article[data-key='" + this.currentChirpId + "']")
 				this.currentChirpIndex = $(selector).find('article').index(chirp)
@@ -64,8 +64,8 @@ BTD.controller.chirpManager = (function() {
 		}
 		, setCurrentChirpByPosition : function(columnId, position) {
 			var chirpId = null
-			  , selector = TD.controller.columnManager.get(columnId).containerUpdatesSelector
-			$(selector).find('article').each(function() {
+			  , chirpContainer = TD.controller.columnManager.get(columnId).getChirpContainer()
+			chirpContainer.find('article').each(function() {
 				var chirp = $(this)
 				if (chirp.position().top <= position.top &&
 						position.top < chirp.position().top + chirp.height()
@@ -76,9 +76,10 @@ BTD.controller.chirpManager = (function() {
 			})
 			this.setCurrentChirp(columnId, chirpId)
 		}
+		/*
 		, getChirpsInViewPort : function(columnId) {
-			var columnTop = $('#' + columnId + ' .column-updates').scrollTop()
-			  , columnHeight = $('#' + columnId + ' .column-updates').height()
+			var columnTop = $('[data-column="' + columnId + '"] .column-updates').scrollTop()
+			  , columnHeight = $('[data-column="' + columnId + '"] .column-updates').height()
 			  , visibleChirps = []
 
 			$('#' + columnId + ' article').each(function() {
@@ -90,5 +91,6 @@ BTD.controller.chirpManager = (function() {
 			})
 			return visibleChirps
 		}
+		*/
 	}
 })();

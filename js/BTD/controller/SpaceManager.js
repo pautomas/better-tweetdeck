@@ -47,7 +47,7 @@ BTD.controller.spaceManager = (function() {
 				 ,  columnId = null
 				if (column !== undefined) {
 					columnId = column.model.getKey()
-					$('#' + columnId).show()
+					BTD.controller.columnManager.getColumnElement(columnId).show()
 				}
 			})
 			$('#column-navigator .menu-button').text(space.name)

@@ -11,13 +11,18 @@ BTD.components.KeyboardShortcuts = {
 					console.log(e.target.tagName)
 					return 
 				}
+				var column = TD.controller.columnManager.get(BTD.controller.columnManager.getCurrentColumnId())
+					, $currentColumn = $()
+				if (column) {
+					$currentColumn = TD.controller.columnManager.get(BTD.controller.columnManager.getCurrentColumnId()).getChirpContainer()
+				}
 				switch (e.which) {
 					case 13: // Enter - Open tweet detail
-						var detailHeader = $('#' + BTD.controller.columnManager.getCurrentColumnId() + ' .js-column-back')
-						if ($('#' + BTD.controller.columnManager.getCurrentColumnId()).hasClass('is-shifted-1')) {
+						var detailHeader = $currentColumn.find('.js-column-back')
+						if ($currentColumn.hasClass('is-shifted-1')) {
 							detailHeader.click()
 						} else {
-							$('#' + BTD.controller.columnManager.getCurrentColumnId()).find("[data-key='" + BTD.controller.chirpManager.getCurrentChirpId() + "']").children('div').click()
+							$currentColumn.find("[data-key='" + BTD.controller.chirpManager.getCurrentChirpId() + "']").children('div').click()
 						}
 						break
 					case 27: // ESC - Close dialog
@@ -81,10 +86,10 @@ BTD.components.KeyboardShortcuts = {
 					case 37: // left - Previous column
 					case 72: // H - Previous column
 						var columns = BTD.controller.columnManager.getIds()
-						  , position = $('#' + BTD.controller.columnManager.getCurrentColumnId()).find('article[data-key="' + BTD.controller.chirpManager.getCurrentChirpId() + '"]').position()
+						  , position = $currentColumn.find('article[data-key="' + BTD.controller.chirpManager.getCurrentChirpId() + '"]').position()
 
 						if (position != null) {
-							position.top = position.top + $('#' + BTD.controller.columnManager.getCurrentColumnId()).find('article[data-key="' + BTD.controller.chirpManager.getCurrentChirpId() + '"]').height() / 2
+							position.top = position.top + $currentColumn.find('article[data-key="' + BTD.controller.chirpManager.getCurrentChirpId() + '"]').height() / 2
 						}
 
 						if (this.currentColumnIndex != null) { 
@@ -102,10 +107,10 @@ BTD.components.KeyboardShortcuts = {
 					case 39: // right - Next column
 					case 76: // L - Next column
 						var columns = BTD.controller.columnManager.getIds()
-						  , position = $('#' + BTD.controller.columnManager.getCurrentColumnId()).find('article[data-key="' + BTD.controller.chirpManager.getCurrentChirpId() + '"]').position()
+						  , position = $currentColumn.find('article[data-key="' + BTD.controller.chirpManager.getCurrentChirpId() + '"]').position()
 
 						if (position != null) {
-							position.top = position.top + $('#' + BTD.controller.columnManager.getCurrentColumnId()).find('article[data-key="' + BTD.controller.chirpManager.getCurrentChirpId() + '"]').height() / 2
+							position.top = position.top + $currentColumn.find('article[data-key="' + BTD.controller.chirpManager.getCurrentChirpId() + '"]').height() / 2
 						}
 		
 						if (this.currentColumnIndex != null) { 
@@ -133,18 +138,18 @@ BTD.components.KeyboardShortcuts = {
 						if (!e.shiftKey && !e.metaKey && !e.altKey) {
 							var columnDetail = TD.controller.columnManager.getAll()[BTD.controller.columnManager.getCurrentColumnId()].detailViewComponent
 							if (columnDetail && columnDetail.chirp.messages) {
-								$('#' + BTD.controller.columnManager.getCurrentColumnId() + ' .js-reply-tweetbox').focus()
+								$currentColumn.find('.js-reply-tweetbox').focus()
 							} else {
-								$('#' + BTD.controller.columnManager.getCurrentColumnId()).find("[data-key='" + BTD.controller.chirpManager.getCurrentChirpId() + "']").find(('[rel="reply"]')).click()
+								$currentColumn.find("[data-key='" + BTD.controller.chirpManager.getCurrentChirpId() + "']").find(('[rel="reply"]')).click()
 							}
 							return false
 						}
 						break
 					case 84: // T - Retweet
-						$('#' + BTD.controller.columnManager.getCurrentColumnId()).find("[data-key='" + BTD.controller.chirpManager.getCurrentChirpId() + "']").find('[rel="retweet"]').click()
+						$currentColumn.find("[data-key='" + BTD.controller.chirpManager.getCurrentChirpId() + "']").find('[rel="retweet"]').click()
 						break
 					case 70: // F - Favorite
-						$('#' + BTD.controller.columnManager.getCurrentColumnId()).find("[data-key='" + BTD.controller.chirpManager.getCurrentChirpId() + "']").find('[rel="favorite"]').click()
+						$currentColumn.find("[data-key='" + BTD.controller.chirpManager.getCurrentChirpId() + "']").find('[rel="favorite"]').click()
 						break
 					case 191: 
 						if (e.shiftKey) { // ? - Show help dialog
